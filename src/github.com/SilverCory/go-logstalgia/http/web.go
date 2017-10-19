@@ -15,7 +15,7 @@ type Server struct {
 	templater   *template.Template
 	config      *config.LogstalgiaConfig
 	clientsLock *sync.Mutex
-	socket      *socket.Handler
+	Socket      *socket.Handler
 }
 
 func New(conf *config.LogstalgiaConfig) (s *Server) {
@@ -25,11 +25,11 @@ func New(conf *config.LogstalgiaConfig) (s *Server) {
 		rootRouter:  mux.NewRouter(),
 		templater:   template.Must(template.New("index.html").ParseFiles(conf.TemplateFileDirectory + "index.html")),
 		clientsLock: &sync.Mutex{},
-		socket:      socket.New(),
+		Socket:      socket.New(),
 	}
 
-	s.rootRouter.HandleFunc("/ws", s.socket.UpgradeWebsocket)
-	s.rootRouter.HandleFunc("/", s.handleIndex)
+	s.rootRouter.HandleFunc("/ws", s.Socket.UpgradeWebsocket)
+	s.rootRouter.HandleFunc("/", s.HandleIndex)
 	s.rootRouter.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
 	return
@@ -54,10 +54,10 @@ type LogEntry struct {
 }
 
 func (s *Server) Broadcast(p *LogEntry) {
-	s.socket.BroadcastJSON(p)
+	s.Socket.BroadcastJSON(p)
 }
 
-func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
+func (s *Server) HandleIndex(w http.ResponseWriter, r *http.Request) {
 
 	err := s.templater.Execute(w, s.config.PageConfig)
 	if err != nil {

@@ -43,7 +43,7 @@ func (l *LogstalgiaConfig) Load() {
 				Colours:   true,
 				Framerate: 30,
 				Speed:     15,
-				Summarize: true,
+				Summarise: true,
 			}
 			fmt.Println("There was an error loading the config!", err)
 			return

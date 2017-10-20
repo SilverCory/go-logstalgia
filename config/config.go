@@ -19,7 +19,6 @@ type PageConfig struct {
 	Colours   bool
 	Time      bool
 	Summarise bool
-	Summarize bool
 }
 
 func (l *LogstalgiaConfig) Load() {
